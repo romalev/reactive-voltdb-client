@@ -1,6 +1,7 @@
 # Reactive VoltDB client #
 
 **Introduction**
+-
 This is so far an attempt to write "reactive" client in java for VoltDB.  
 
 **Motivation**
