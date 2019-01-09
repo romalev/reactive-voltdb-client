@@ -51,6 +51,7 @@
 
   <properties>
     <stack.version>3.6.2</stack.version>
+    <voltdb.client.version>5.0</voltdb.client.version>
   </properties>
 
   <dependencyManagement>
@@ -107,6 +108,12 @@
       <artifactId>vertx-rx-java2-gen</artifactId>
       <version>${stack.version}</version>
       <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.voltdb</groupId>
+      <artifactId>voltdbclient</artifactId>
+      <version>${voltdb.client.version}</version>
     </dependency>
 
     <dependency>
