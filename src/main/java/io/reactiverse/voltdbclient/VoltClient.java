@@ -32,14 +32,21 @@ import io.vertx.core.Vertx;
 public interface VoltClient {
 
   /**
-   * Default non-admin port number for volt cluster instances.
+   * Create a {@link VoltClient} with default {@link VoltClientOptions}.
+   *
+   * @param vertx the Vert.x {@link Vertx} instance
+   * @return the initialized client.
    */
-  public static final int VOLTDB_SERVER_PORT = 21212;
-
   static VoltClient create(Vertx vertx) {
     return new VoltClientImpl(vertx, new VoltClientOptions());
   }
 
+  /**
+   * Create a {@link VoltClient} with custom {@link VoltClientOptions}.
+   *
+   * @param vertx the Vert.x {@link Vertx} instance
+   * @return the initialized client.
+   */
   static VoltClient create(Vertx vertx, VoltClientOptions options) {
     return new VoltClientImpl(vertx, options);
   }
@@ -49,6 +56,7 @@ public interface VoltClient {
    * Create a connection to a VoltDB node and add it to the set of connections.
    *
    * @param resultHandler holds the result of the created connection.
+   * @return reference to this, for fluency.
    */
   @Fluent
   VoltClient createConnection(Handler<AsyncResult<Void>> resultHandler);

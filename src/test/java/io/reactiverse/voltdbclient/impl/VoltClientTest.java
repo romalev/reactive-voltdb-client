@@ -18,6 +18,8 @@ package io.reactiverse.voltdbclient.impl;
 import io.reactiverse.voltdbclient.VoltClient;
 import io.reactiverse.voltdbclient.VoltClientOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.RunTestOnContext;
@@ -37,10 +39,10 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class VoltClientTest {
 
-  private static final String HOST = "http://roman.westeurope.cloudapp.azure.com";
+  private static final String HOST = "roman.westeurope.cloudapp.azure.com";
   private static final int PORT = 8082;
-  private static final String USERNAME = "";
-  private static final String PASSWORD = "";
+  private static final String USERNAME = "test";
+  private static final String PASSWORD = "test";
 
   @Rule
   public RunTestOnContext rule = new RunTestOnContext();
@@ -64,16 +66,17 @@ public class VoltClientTest {
   @Test
   public void testCreateConnection(TestContext context) {
     Async async = context.async();
-
     voltClient.createConnection(event -> {
-      Assert.assertTrue(event.failed());
+      Assert.assertTrue(event.succeeded());
       async.complete();
-
     });
   }
 
   @After
   public void tearDown(TestContext context) {
-    vertx.close(context.asyncAssertSuccess());
+    voltClient.close(event -> {
+      vertx.close(context.asyncAssertSuccess());
+    });
+
   }
 }

@@ -26,6 +26,7 @@ import io.vertx.core.logging.LoggerFactory;
 import org.voltdb.client.Client;
 import org.voltdb.client.ClientConfig;
 import org.voltdb.client.ClientFactory;
+import org.voltdb.client.ClientStatusListenerExt;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -49,7 +50,7 @@ public class VoltClientImpl implements VoltClient {
     this.vertx = vertx;
     this.context = vertx.getOrCreateContext();
     this.voltClientOptions = voltClientOptions;
-    this.client = ClientFactory.createClient(toClientConfig(voltClientOptions));
+    this.client = ClientFactory.createClient(getClientConfig(voltClientOptions));
   }
 
   @Override
@@ -57,14 +58,14 @@ public class VoltClientImpl implements VoltClient {
     context.executeBlocking(event -> {
       try {
         log.trace("Trying to connect to: " + voltClientOptions.getHost() + ":" + voltClientOptions.getPort());
-        client.createConnection(voltClientOptions.getHost(), voltClientOptions.getPort());
+        client.createConnection(voltClientOptions.getHost(), 21212);
         log.trace("Connection for: " + voltClientOptions.getHost() + ":" + voltClientOptions.getPort() + " has been created.");
         event.complete();
       } catch (UnknownHostException e) {
-        log.error("IP address of a host: " + voltClientOptions.getHost() + " could not be determined.");
+        log.error("IP address of a host: " + voltClientOptions.getHost() + " could not be determined.", e);
         event.fail(e);
       } catch (IOException e) {
-        log.error("I/O exception of some sort has occurred with connecting to: " + voltClientOptions.getHost() + ":" + voltClientOptions.getPort());
+        log.error("I/O exception of some sort has occurred with connecting to: " + voltClientOptions.getHost() + ":" + voltClientOptions.getPort(), e);
         event.fail(e);
       }
     }, resultHandler);
@@ -86,7 +87,7 @@ public class VoltClientImpl implements VoltClient {
 
   }
 
-  private ClientConfig toClientConfig(VoltClientOptions voltClientOptions) {
-    return new ClientConfig(voltClientOptions.getUsername(), voltClientOptions.getPassword());
+  private ClientConfig getClientConfig(VoltClientOptions voltClientOptions) {
+    return new ClientConfig(voltClientOptions.getUsername(), voltClientOptions.getPassword(), true, new ClientStatusListenerExt());
   }
 }
