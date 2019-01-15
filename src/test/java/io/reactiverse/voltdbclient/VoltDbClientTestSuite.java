@@ -16,13 +16,18 @@
 
 package io.reactiverse.voltdbclient;
 
+import io.reactiverse.voltdbclient.impl.VoltClientTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
+ * Central test suite for volt db client.
+ *
  * @author <a href="mailto:roman.levytskyi.oss@gmail.com">Roman Levytskyi</a>
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({})
+@Suite.SuiteClasses({
+  VoltClientTest.class
+})
 public class VoltDbClientTestSuite {
 }
