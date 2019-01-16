@@ -18,14 +18,17 @@ package io.reactiverse.voltdbclient.impl;
 import io.reactiverse.voltdbclient.VoltClient;
 import io.reactiverse.voltdbclient.VoltClientOptions;
 import io.vertx.core.Vertx;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.RunTestOnContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the {@link io.reactiverse.voltdbclient.VoltClient}
@@ -67,16 +70,16 @@ public class VoltClientTest {
   public void testCreateConnection(TestContext context) {
     Async async = context.async();
     voltClient.createConnection(event -> {
-      Assert.assertTrue(event.succeeded());
+      assertTrue(event.succeeded());
       async.complete();
     });
   }
+
 
   @After
   public void tearDown(TestContext context) {
     voltClient.close(event -> {
       vertx.close(context.asyncAssertSuccess());
     });
-
   }
 }

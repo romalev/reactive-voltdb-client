@@ -17,16 +17,10 @@ package io.reactiverse.voltdbclient.impl;
 
 import io.reactiverse.voltdbclient.VoltClient;
 import io.reactiverse.voltdbclient.VoltClientOptions;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Context;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import org.voltdb.client.Client;
-import org.voltdb.client.ClientConfig;
-import org.voltdb.client.ClientFactory;
-import org.voltdb.client.ClientStatusListenerExt;
+import org.voltdb.client.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -69,6 +63,23 @@ public class VoltClientImpl implements VoltClient {
         event.fail(e);
       }
     }, resultHandler);
+    return this;
+  }
+
+  @Override
+  public VoltClient callProcedure(String procName, Object[] parameters, Handler<AsyncResult<ClientResponse>> resultHandler) {
+    try {
+      boolean queued = client.callProcedure(clientResponse -> {
+        resultHandler.handle(Future.succeededFuture(clientResponse));
+      }, procName, parameters);
+
+      if (!queued) {
+        // to be tested.
+      }
+    } catch (IOException e) {
+      log.error("Error occurred while calling procedure: " + procName, e);
+      resultHandler.handle(Future.failedFuture(e));
+    }
     return this;
   }
 
