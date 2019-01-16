@@ -21,6 +21,7 @@ import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import org.voltdb.client.ClientResponse;
 
 /**
  * VoltDb client that can connect to one or more nodes in a volt cluster.
@@ -51,7 +52,6 @@ public interface VoltClient {
     return new VoltClientImpl(vertx, options);
   }
 
-
   /**
    * Create a connection to a VoltDB node and add it to the set of connections.
    *
@@ -60,6 +60,18 @@ public interface VoltClient {
    */
   @Fluent
   VoltClient createConnection(Handler<AsyncResult<Void>> resultHandler);
+
+  /**
+   * Invoke a replicated procedure.
+   *
+   * @param procName      class name (not qualified by package) of the procedure to execute.
+   * @param parameters    vararg list of procedure's parameter values.
+   * @param resultHandler holds the result of stored procedure invokation.
+   * @return reference to this, for fluency.
+   */
+  @Fluent
+  VoltClient callProcedure(String procName, Object[] parameters, Handler<AsyncResult<ClientResponse>> resultHandler);
+
 
   /**
    * Close the client and release its resources.
